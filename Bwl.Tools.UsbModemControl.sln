@@ -1,0 +1,28 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 14
+VisualStudioVersion = 14.0.23107.0
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{F184B08F-C81C-45F6-A57F-5ABD9991F28F}") = "Bwl.Hardware.UsbModemControl", "Bwl.Tools.UsbModemControl\Bwl.Hardware.UsbModemControl.vbproj", "{700CCE09-908A-4B15-9E81-A2E667D02D22}"
+EndProject
+Project("{F184B08F-C81C-45F6-A57F-5ABD9991F28F}") = "Bwl.Hardware.UsbModemControl.App", "Bwl.Tools.UsbModemControl.App\Bwl.Hardware.UsbModemControl.App.vbproj", "{4F943F1C-563E-4CBA-91AA-EC9BE67E925A}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{700CCE09-908A-4B15-9E81-A2E667D02D22}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{700CCE09-908A-4B15-9E81-A2E667D02D22}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{700CCE09-908A-4B15-9E81-A2E667D02D22}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{700CCE09-908A-4B15-9E81-A2E667D02D22}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4F943F1C-563E-4CBA-91AA-EC9BE67E925A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4F943F1C-563E-4CBA-91AA-EC9BE67E925A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4F943F1C-563E-4CBA-91AA-EC9BE67E925A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4F943F1C-563E-4CBA-91AA-EC9BE67E925A}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal
