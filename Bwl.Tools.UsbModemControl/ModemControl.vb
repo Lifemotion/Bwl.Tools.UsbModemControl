@@ -61,7 +61,7 @@ Public Class ModemControl
             Try
                 port.Open()
                 port.Write("ATI" + vbCrLf)
-                Thread.Sleep(100)
+                Thread.Sleep(500)
                 Dim read = port.ReadExisting.ToLower
                 If read.Contains("huawei") Then
                     Dim e3372 = "E3372"

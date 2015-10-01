@@ -116,7 +116,7 @@ Public Class HuaweiE3372
 
     Private _lastConnectedReport As DateTime
     Public Sub CheckConnectedState()
-        If (Now - _lastConnectedReport).TotalSeconds = 15 Then
+        If (Now - _lastConnectedReport).TotalSeconds > 15 Then
             _state = ModemState.connecting
             ExtendedInfo.GsmMode = ""
         End If
