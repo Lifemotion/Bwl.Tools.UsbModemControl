@@ -45,7 +45,11 @@ Public Class HuaweiE3372
     Inherits Modem
 
     Public Sub New(portName As String)
-        MyBase.New(portName, "E3372")
+        Me.New(portName, "E3372")
+    End Sub
+
+    Public Sub New(portName As String, identifier As String)
+        MyBase.New(portName, identifier)
     End Sub
 
     Private Sub CloseControlPort()

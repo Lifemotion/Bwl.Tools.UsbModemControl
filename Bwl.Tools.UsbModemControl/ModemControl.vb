@@ -66,6 +66,8 @@ Public Class ModemControl
                 If read.Contains("huawei") Then
                     Dim e3372 = "E3372"
                     If read.Contains(e3372.ToLower) Then list.Add(New ModemInfo(portName, e3372))
+                    Dim e3372_megafon = "M150-2"
+                    If read.Contains(e3372_megafon.ToLower) Then list.Add(New ModemInfo(portName, e3372_megafon))
                 End If
             Catch ex As Exception
             End Try
@@ -87,6 +89,7 @@ Public Class ModemControl
             Dim list As New List(Of Modem)
             For Each mi In modems
                 If mi.Model = "E3372" Then list.Add(New HuaweiE3372(mi.Port))
+                If mi.Model = "M150-2" Then list.Add(New MegafonM150_2(mi.Port))
             Next
             _Modems = list.ToArray
             _logger.AddMessage("Found modems: " + _Modems.Length.ToString)
