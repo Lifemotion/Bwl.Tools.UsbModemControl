@@ -18,7 +18,7 @@ Imports System.Runtime.InteropServices
 <Assembly: ComVisible(False)>
 
 'Следующий GUID служит для идентификации библиотеки типов, если этот проект будет видимым для COM
-<Assembly: Guid("05a642f9-e820-4e88-aba7-dea8c19c942c")> 
+<Assembly: Guid("05a642f9-e820-4e88-aba7-dea8c19c942c")>
 
 ' Сведения о версии сборки состоят из следующих четырех значений:
 '
@@ -31,5 +31,5 @@ Imports System.Runtime.InteropServices
 ' используя "*", как показано ниже:
 ' <Assembly: AssemblyVersion("1.0.*")> 
 
-<Assembly: AssemblyVersion("1.0.0.0")> 
-<Assembly: AssemblyFileVersion("1.0.0.0")> 
+<Assembly: AssemblyVersion("1.1.1.0")>
+<Assembly: AssemblyFileVersion("1.1.1.0")>

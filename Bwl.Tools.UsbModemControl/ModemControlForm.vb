@@ -43,6 +43,11 @@ Public Class ModemControlForm
     End Sub
 
     Private Sub ModemControlForm_Load(sender As Object, e As EventArgs) Handles MyBase.Load
-
+        Me.Text += " " + Application.ProductVersion.ToString
+        Try
+            Dim time = IO.File.GetLastWriteTime(Application.ExecutablePath)
+            Me.Text += " (" + time.ToString + ")"
+        Catch ex As Exception
+        End Try
     End Sub
 End Class
