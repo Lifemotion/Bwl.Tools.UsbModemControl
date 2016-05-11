@@ -1,14 +1,15 @@
 ﻿Imports Bwl.Framework
 
 Public Class ModemControlForm
-    Private _modem As ModemControl
+    Private _modem As ModemControl ' Модем
 
-    Public Sub New(modem As ModemControl)
+    Public Sub New(modem As ModemControl) ' Конструктор
         _modem = modem
         InitializeComponent()
     End Sub
 
-    Private _displayingModems As Modem() = {}
+    Private _displayingModems As Modem() = {} ' Отображение модемов
+
     Private Sub Timer1_Tick(sender As Object, e As EventArgs) Handles Timer1.Tick
         Dim state As New List(Of String)
         state.Add("ModemControl " + _modem.State.ToString)
@@ -25,6 +26,7 @@ Public Class ModemControlForm
                 state.Add("--> GsmMode: " + modem.ExtendedInfo.GsmMode.ToString)
                 state.Add("--> Rssi: " + modem.ExtendedInfo.Rssi.ToString)
                 state.Add("--> Network: " + modem.ExtendedInfo.Network.ToString)
+                state.Add("--> SIM Card Number: " + modem.ExtendedInfo.ModemNumber.ToString)
                 state.Add("--> APN: " + modem.APN.ToString)
                 state.Add("")
             Next
