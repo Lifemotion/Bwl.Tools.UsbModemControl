@@ -2,19 +2,6 @@
 Imports System.Threading
 Imports Bwl.Framework
 
-Public Class ModemInfo
-    Public Sub New(port As String, model As String)
-        Me.Port = port
-        Me.Model = model
-    End Sub
-    Public Sub New()
-        Me.Port = ""
-        Me.Model = ""
-    End Sub
-    Public ReadOnly Property Port As String
-    Public ReadOnly Property Model As String
-End Class
-
 Public Class ModemControl
     Private _logger As Logger
     ReadOnly Property State As ModemControlState = ModemControlState.modemsNotFound
@@ -78,7 +65,6 @@ Public Class ModemControl
         Next
         Return list.ToArray
     End Function
-
 
     Private Sub FindModems()
         _logger.AddMessage("Trying to find modems...")

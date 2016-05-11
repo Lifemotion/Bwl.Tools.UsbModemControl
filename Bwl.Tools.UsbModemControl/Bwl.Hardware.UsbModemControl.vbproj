@@ -67,16 +67,20 @@
     <Import Include="System.Threading.Tasks" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="HuaweiE3372.vb" />
-    <Compile Include="MegafonM150_2.vb" />
-    <Compile Include="ModemControl.vb" />
-    <Compile Include="ModemControlForm.Designer.vb">
+    <Compile Include="Common\ModemExtendedInfo.vb" />
+    <Compile Include="Common\ModemInfo.vb" />
+    <Compile Include="Common\ModemState.vb" />
+    <Compile Include="Modems\HuaweiE3372.vb" />
+    <Compile Include="Modems\MegafonM150_2.vb" />
+    <Compile Include="Common\ModemControl.vb" />
+    <Compile Include="Common\Modem.vb" />
+    <Compile Include="UI\ModemControlForm.Designer.vb">
       <DependentUpon>ModemControlForm.vb</DependentUpon>
     </Compile>
-    <Compile Include="ModemControlForm.vb">
+    <Compile Include="UI\ModemControlForm.vb">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="ModemControlState.vb" />
+    <Compile Include="Common\ModemControlState.vb" />
     <Compile Include="My Project\AssemblyInfo.vb" />
     <Compile Include="My Project\Application.Designer.vb">
       <AutoGen>True</AutoGen>
@@ -92,9 +96,10 @@
       <DependentUpon>Settings.settings</DependentUpon>
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
     </Compile>
+    <Compile Include="Tools\UCS2.vb" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="ModemControlForm.resx">
+    <EmbeddedResource Include="UI\ModemControlForm.resx">
       <DependentUpon>ModemControlForm.vb</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="My Project\Resources.resx">
