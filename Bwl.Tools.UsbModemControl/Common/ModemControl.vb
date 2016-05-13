@@ -7,10 +7,37 @@ Public Class ModemControl
     ReadOnly Property State As ModemControlState = ModemControlState.modemsNotFound
     ReadOnly Property Modems As Modem()
     Private _thread As Threading.Thread
+    Private _autoui As AutoUI
+    Private _autouiInfoList As AutoListbox
+    Private _autouiState As AutoTextbox
+    Private _autouiAdditional As AutoTextbox
 
-    Public Sub New(logger As Logger)
+    Public Sub New(logger As Logger, autoui As AutoUI)
         _logger = logger
+        _autoui = autoui
+
+        _autouiState = New AutoTextbox(_autoui, "State")
+        _autouiAdditional = New AutoTextbox(_autoui, "Additional")
+        _autouiInfoList = New AutoListbox(_autoui, "Modems Info")
     End Sub
+
+    Public ReadOnly Property AutoUI As AutoUI
+        Get
+            Return _autoui
+        End Get
+    End Property
+
+    Public ReadOnly Property StateText As String
+        Get
+            Return _autouiState.Text
+        End Get
+    End Property
+
+    Public ReadOnly Property AdditionalText As String
+        Get
+            Return _autouiAdditional.Text
+        End Get
+    End Property
 
     Public Sub Run()
         Do
@@ -19,8 +46,47 @@ Public Class ModemControl
             Catch ex As Exception
                 _logger.AddError("ModemControl Check Error: " + ex.Message)
             End Try
-            Thread.Sleep(1)
+            Try
+                CreateStates()
+            Catch ex As Exception
+                _logger.AddError("ModemControl CreateStates Error: " + ex.Message)
+            End Try
+            Thread.Sleep(1000)
         Loop
+    End Sub
+
+    Private Sub CreateStates()
+        Dim info = "NoModem"
+        Dim add = "Modems not found"
+        Dim list As New List(Of String)
+        list.Add("ModemControl " + State.ToString)
+        list.Add("")
+        If Modems IsNot Nothing Then
+            For Each modem In Modems
+                list.Add("Modem " + modem.ModemInfo.Port + " - " + modem.ModemInfo.Model)
+                list.Add("--> Enabled: " + modem.Enabled.ToString)
+                list.Add("--> State: " + modem.State.ToString)
+                list.Add("--> LastLinkReport: " + modem.ExtendedInfo.LastLinkReport.ToLongTimeString)
+                list.Add("--> LastDataflowReport: " + modem.ExtendedInfo.LastDataflowReport.ToLongTimeString)
+                list.Add("--> GsmMode: " + modem.ExtendedInfo.GsmMode.ToString)
+                list.Add("--> Rssi: " + modem.ExtendedInfo.Rssi.ToString)
+                ' state.Add("--> Network: " + modem.ExtendedInfo.Network.ToString)
+                list.Add("--> SIM Card Number: " + modem.ExtendedInfo.ModemNumber.ToString)
+                list.Add("--> APN: " + modem.APN.ToString)
+                list.Add("")
+                If modem.State = ModemState.connected Or modem.State = ModemState.connectedDataflow Then
+                    If modem.ExtendedInfo.GsmMode > "" Then info = modem.ExtendedInfo.GsmMode Else info = "NoNetwork"
+                    add = modem.ModemInfo.Model + ", " + modem.ExtendedInfo.Rssi.ToString + ", " + modem.APN.ToString
+                Else
+                    info = "Fault"
+                    If modem.State = ModemState.connecting Then info = "Connecting"
+                    add = modem.ModemInfo.Model + ", " + modem.ExtendedInfo.Rssi.ToString + ", " + modem.State.ToString
+                End If
+            Next
+        End If
+        _autouiInfoList.Items.Replace(list.ToArray)
+        _autouiState.Text = info
+        _autouiAdditional.Text = add
     End Sub
 
     Public Sub RunInThread()

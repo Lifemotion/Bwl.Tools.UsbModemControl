@@ -93,7 +93,7 @@ Public Class HuaweiE3372
             If line.Contains("^HCSQ:") Then
                 Dim parts = line.Split({":", ","}, StringSplitOptions.RemoveEmptyEntries)
                 If parts.Count > 1 Then
-                    ExtendedInfo.GsmMode = parts(1)
+                    ExtendedInfo.GsmMode = parts(1).Replace("""", "")
                     ExtendedInfo.Rssi = CInt(parts(2)) - 121
                     ExtendedInfo.LastLinkReport = Now
                     If (ExtendedInfo.ModemNumber = "") Then GetSimCardNumber()

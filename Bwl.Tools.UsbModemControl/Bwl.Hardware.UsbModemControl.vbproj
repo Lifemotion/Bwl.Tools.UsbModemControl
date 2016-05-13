@@ -74,12 +74,6 @@
     <Compile Include="Modems\MegafonM150_2.vb" />
     <Compile Include="Common\ModemControl.vb" />
     <Compile Include="Common\Modem.vb" />
-    <Compile Include="UI\ModemControlForm.Designer.vb">
-      <DependentUpon>ModemControlForm.vb</DependentUpon>
-    </Compile>
-    <Compile Include="UI\ModemControlForm.vb">
-      <SubType>Form</SubType>
-    </Compile>
     <Compile Include="Common\ModemControlState.vb" />
     <Compile Include="My Project\AssemblyInfo.vb" />
     <Compile Include="My Project\Application.Designer.vb">
@@ -99,9 +93,6 @@
     <Compile Include="Tools\UCS2.vb" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="UI\ModemControlForm.resx">
-      <DependentUpon>ModemControlForm.vb</DependentUpon>
-    </EmbeddedResource>
     <EmbeddedResource Include="My Project\Resources.resx">
       <Generator>VbMyResourcesResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.vb</LastGenOutput>
