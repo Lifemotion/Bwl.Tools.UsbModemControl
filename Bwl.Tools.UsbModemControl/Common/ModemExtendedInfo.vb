@@ -5,4 +5,5 @@
     Public Property LastDataflowReport As DateTime ' Отчёт о потоке данных
     Public Property LastLinkReport As DateTime ' Отчёт о режиме связи
     Public Property ModemNumber As String = ""
+    Public Property Version As String = ""
 End Class

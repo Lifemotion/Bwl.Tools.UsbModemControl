@@ -1,8 +1,9 @@
 ﻿Public Enum ModemState
     notDetected
+    possiblyConnected
     connected
-    connectedDataflow
     connecting
     disabled
     fault
+    removed
 End Enum

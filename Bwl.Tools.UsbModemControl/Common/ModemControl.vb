@@ -5,7 +5,7 @@ Imports Bwl.Framework
 Public Class ModemControl
     Private _logger As Logger
     ReadOnly Property State As ModemControlState = ModemControlState.modemsNotFound
-    ReadOnly Property Modems As Modem()
+    ReadOnly Property Modems As New List(Of Modem)
     Private _thread As Threading.Thread
     Private _autoui As AutoUI
     Private _autouiInfoList As AutoListbox
@@ -74,7 +74,11 @@ Public Class ModemControl
                 list.Add("--> SIM Card Number: " + modem.ExtendedInfo.ModemNumber.ToString)
                 list.Add("--> APN: " + modem.APN.ToString)
                 list.Add("")
-                If modem.State = ModemState.connected Or modem.State = ModemState.connectedDataflow Then
+                Dim lines = modem.ExtendedInfo.Version.Split(vbCrLf)
+                For Each line In lines
+                    list.Add("--> Version: " + line)
+                Next
+                If modem.State = ModemState.connected Then
                     If modem.ExtendedInfo.GsmMode > "" Then info = modem.ExtendedInfo.GsmMode Else info = "NoNetwork"
                     add = modem.ModemInfo.Model + ", " + modem.ExtendedInfo.Rssi.ToString + ", " + modem.APN.ToString
                 Else
@@ -100,9 +104,13 @@ Public Class ModemControl
             Case ModemControlState.modemsNotFound
                 FindModems()
             Case ModemControlState.modemsFound
-                For Each modem In Modems
-                    modem.Check
+                For Each modem In Modems.ToArray
+                    modem.Check()
+                    If modem.State = ModemState.removed Then
+                        Modems.Remove(modem)
+                    End If
                 Next
+                If Modems.Count = 0 Then State = ModemControlState.modemsNotFound
         End Select
     End Sub
 
@@ -140,11 +148,11 @@ Public Class ModemControl
         Else
             Dim list As New List(Of Modem)
             For Each mi In modems
-                If mi.Model = "E3372" Then list.Add(New HuaweiE3372(mi.Port))
-                If mi.Model = "M150-2" Then list.Add(New MegafonM150_2(mi.Port))
+                If mi.Model = "E3372" Then list.Add(New HuaweiE3372(mi.Port, _logger))
+                If mi.Model = "M150-2" Then list.Add(New MegafonM150_2(mi.Port, _logger))
             Next
-            _Modems = list.ToArray
-            _logger.AddMessage("Found modems: " + _Modems.Length.ToString)
+            _Modems = list
+            _logger.AddMessage("Found modems: " + _Modems.Count.ToString)
             _State = ModemControlState.modemsFound
         End If
     End Sub
