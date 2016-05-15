@@ -110,7 +110,7 @@ Public Class ModemControl
                         Modems.Remove(modem)
                     End If
                 Next
-                If Modems.Count = 0 Then State = ModemControlState.modemsNotFound
+                If Modems.Count = 0 Then _State = ModemControlState.modemsNotFound
         End Select
     End Sub
 
