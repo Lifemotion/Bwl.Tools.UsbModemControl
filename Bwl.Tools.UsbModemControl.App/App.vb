@@ -3,7 +3,7 @@ Imports Bwl.Framework
 
 Public Module App
     Dim _app As New AppBase
-    Dim _appFormDescriptor As New AutoFormDescriptor(_app.AutoUI, "form") With {.ShowLogger = True}
+    Dim _appFormDescriptor As New AutoFormDescriptor(_app.AutoUI, "form") With {.ShowLogger = True, .LoggerExtended = False, .FormWidth = 480, .FormHeight = 500}
     Dim _modem As New ModemControl(_app.RootLogger, _app.AutoUI)
     Dim _appServer As New RemoteAppServer(3191, _app)
     Dim WithEvents _netServer As NetServer = _appServer.NetServer
