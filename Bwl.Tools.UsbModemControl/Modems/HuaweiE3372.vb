@@ -32,9 +32,12 @@ Public Class HuaweiE3372
     Private Function Request(req As String, Optional waitMs As Integer = 500) As String
         Try
             _port.ReadExisting()
+            _logger.AddDebug("PortWrite: " + req)
             _port.Write(vbCrLf + req + vbCrLf)
             Threading.Thread.Sleep(waitMs)
-            Return _port.ReadExisting
+            Dim read = _port.ReadExisting
+            _logger.AddDebug("PortRead: " + read)
+            Return read
         Catch ex As Exception
             Return ""
         End Try
@@ -117,7 +120,8 @@ Public Class HuaweiE3372
         End If
 
         Dim read = _port.ReadExisting
-        Debug.WriteLine(read)
+        _logger.AddDebug("PortRead: " + read)
+
 
         Dim lines = read.Split({vbCr, vbLf}, StringSplitOptions.RemoveEmptyEntries)
         For Each line In lines

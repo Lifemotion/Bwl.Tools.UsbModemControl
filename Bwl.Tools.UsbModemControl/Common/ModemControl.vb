@@ -42,6 +42,11 @@ Public Class ModemControl
     Public Sub Run()
         Do
             Try
+                CreateStates()
+            Catch ex As Exception
+                _logger.AddError("ModemControl CreateStates Error: " + ex.Message)
+            End Try
+            Try
                 Check()
             Catch ex As Exception
                 _logger.AddError("ModemControl Check Error: " + ex.Message)
@@ -51,7 +56,7 @@ Public Class ModemControl
             Catch ex As Exception
                 _logger.AddError("ModemControl CreateStates Error: " + ex.Message)
             End Try
-            Thread.Sleep(1000)
+            Thread.Sleep(500)
         Loop
     End Sub
 
@@ -121,6 +126,7 @@ Public Class ModemControl
             Dim port As New IO.Ports.SerialPort(portName, 9600)
             Try
                 port.Open()
+                port.WriteTimeout = 500
                 port.Write("ATI" + vbCrLf)
                 Thread.Sleep(500)
                 Dim read = port.ReadExisting.ToLower

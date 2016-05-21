@@ -4,30 +4,33 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{700CCE09-908A-4B15-9E81-A2E667D02D22}</ProjectGuid>
-    <OutputType>Library</OutputType>
-    <RootNamespace>Bwl.Hardware.UsbModemControl</RootNamespace>
-    <AssemblyName>Bwl.Hardware.UsbModemControl</AssemblyName>
+    <ProjectGuid>{1ACF23E3-0D66-485B-9012-5FF3C3EB1A55}</ProjectGuid>
+    <OutputType>Exe</OutputType>
+    <StartupObject>Bwl.Tools.UsbModemControl.Service.Service</StartupObject>
+    <RootNamespace>Bwl.Tools.UsbModemControl.Service</RootNamespace>
+    <AssemblyName>Bwl.Tools.UsbModemControl.Service</AssemblyName>
     <FileAlignment>512</FileAlignment>
-    <MyType>Windows</MyType>
+    <MyType>Console</MyType>
     <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <PlatformTarget>AnyCPU</PlatformTarget>
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
     <DefineDebug>true</DefineDebug>
     <DefineTrace>true</DefineTrace>
-    <OutputPath>bin\Debug\</OutputPath>
-    <DocumentationFile>Bwl.Hardware.UsbModemControl.xml</DocumentationFile>
+    <OutputPath>..\debug\UsbModemControl Service\bin\</OutputPath>
+    <DocumentationFile>Bwl.Tools.UsbModemControl.Service.xml</DocumentationFile>
     <NoWarn>42016,41999,42017,42018,42019,42032,42036,42020,42021,42022</NoWarn>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <PlatformTarget>AnyCPU</PlatformTarget>
     <DebugType>pdbonly</DebugType>
     <DefineDebug>false</DefineDebug>
     <DefineTrace>true</DefineTrace>
     <Optimize>true</Optimize>
-    <OutputPath>bin\Release\</OutputPath>
-    <DocumentationFile>Bwl.Hardware.UsbModemControl.xml</DocumentationFile>
+    <OutputPath>..\debug\UsbModemControl Service\bin\</OutputPath>
+    <DocumentationFile>Bwl.Tools.UsbModemControl.Service.xml</DocumentationFile>
     <NoWarn>42016,41999,42017,42018,42019,42032,42036,42020,42021,42022</NoWarn>
   </PropertyGroup>
   <PropertyGroup>
@@ -42,20 +45,15 @@
   <PropertyGroup>
     <OptionInfer>On</OptionInfer>
   </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Mono|AnyCPU'">
-    <DebugSymbols>true</DebugSymbols>
-    <DefineDebug>true</DefineDebug>
-    <DefineTrace>true</DefineTrace>
-    <OutputPath>bin\Mono\</OutputPath>
-    <DocumentationFile>Bwl.Hardware.UsbModemControl.xml</DocumentationFile>
-    <NoWarn>42016,41999,42017,42018,42019,42032,42036,42020,42021,42022</NoWarn>
-    <DebugType>full</DebugType>
-    <PlatformTarget>x86</PlatformTarget>
-    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
-  </PropertyGroup>
   <ItemGroup>
     <Reference Include="Bwl.Framework">
       <HintPath>..\refs\Bwl.Framework.dll</HintPath>
+    </Reference>
+    <Reference Include="bwl.Network.ClientServer">
+      <HintPath>..\refs\bwl.Network.ClientServer.dll</HintPath>
+    </Reference>
+    <Reference Include="bwl.Network.ClientServer.Remoting">
+      <HintPath>..\refs\bwl.Network.ClientServer.Remoting.dll</HintPath>
     </Reference>
     <Reference Include="System" />
   </ItemGroup>
@@ -64,19 +62,11 @@
     <Import Include="System" />
     <Import Include="System.Collections" />
     <Import Include="System.Collections.Generic" />
-    <Import Include="System.Drawing" />
     <Import Include="System.Linq" />
     <Import Include="System.Threading.Tasks" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Common\ModemExtendedInfo.vb" />
-    <Compile Include="Common\ModemInfo.vb" />
-    <Compile Include="Common\ModemState.vb" />
-    <Compile Include="Modems\HuaweiE3372.vb" />
-    <Compile Include="Modems\MegafonM150_2.vb" />
-    <Compile Include="Common\ModemControl.vb" />
-    <Compile Include="Common\Modem.vb" />
-    <Compile Include="Common\ModemControlState.vb" />
+    <Compile Include="Service.vb" />
     <Compile Include="My Project\AssemblyInfo.vb" />
     <Compile Include="My Project\Application.Designer.vb">
       <AutoGen>True</AutoGen>
@@ -92,7 +82,6 @@
       <DependentUpon>Settings.settings</DependentUpon>
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
     </Compile>
-    <Compile Include="Tools\UCS2.vb" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="My Project\Resources.resx">
@@ -112,6 +101,13 @@
       <CustomToolNamespace>My</CustomToolNamespace>
       <LastGenOutput>Settings.Designer.vb</LastGenOutput>
     </None>
+    <None Include="App.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Bwl.Tools.UsbModemControl\Bwl.Hardware.UsbModemControl.vbproj">
+      <Project>{700cce09-908a-4b15-9e81-a2e667d02d22}</Project>
+      <Name>Bwl.Hardware.UsbModemControl</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.VisualBasic.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
