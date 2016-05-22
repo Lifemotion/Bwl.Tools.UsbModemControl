@@ -18,7 +18,10 @@ Module Service
             Threading.Thread.Sleep(2000)
             If Console.KeyAvailable Then
                 Dim key = Console.ReadKey
-                If key.Key = ConsoleKey.Escape Then End
+                If key.Key = ConsoleKey.Escape Then
+                end
+         		   End If
+                 
             End If
         Loop
     End Sub

@@ -1,12 +1,26 @@
 ﻿Public Class ModemInfo
+	private _port as string=""
+	private _model as string=""
+
     Public Sub New(port As String, model As String)
-        Me.Port = port
-        Me.Model = model
+        _Port = port
+        _Model = model
     End Sub
+
     Public Sub New()
-        Me.Port = ""
-        Me.Model = ""
+
     End Sub
+
     Public ReadOnly Property Port As String
+            Get
+            Return _port
+        End Get
+    End Property
+
     Public ReadOnly Property Model As String
-End Class
+        Get
+            Return _model
+        End Get
+    End Property
+
+    End Class

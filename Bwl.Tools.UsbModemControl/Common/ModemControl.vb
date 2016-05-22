@@ -4,8 +4,21 @@ Imports Bwl.Framework
 
 Public Class ModemControl
     Private _logger As Logger
-    ReadOnly Property State As ModemControlState = ModemControlState.modemsNotFound
-    ReadOnly Property Modems As New List(Of Modem)
+    private _state as ModemControlState = ModemControlState.modemsNotFound
+    private _modems as New List(Of Modem)
+
+    ReadOnly Property State As ModemControlState
+            Get
+            Return _state
+        End Get
+    End Property
+
+    ReadOnly Property Modems As  List(Of Modem)
+           Get
+            Return _modems
+        End Get
+    End Property
+
     Private _thread As Threading.Thread
     Private _autoui As AutoUI
     Private _autouiInfoList As AutoListbox

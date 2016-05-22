@@ -13,29 +13,34 @@ Public Class HuaweiE3372
     End Sub
 
     Private Sub CloseControlPort()
+        _logger.AddDebug("CloseControlPort")
         If _port IsNot Nothing Then
             Try
                 _port.Close()
                 _port.Dispose()
                 _port = Nothing
             Catch ex As Exception
+                _logger.AddError(ex.Message)
             End Try
         End If
     End Sub
 
     Private Sub OpenControlPort()
+        _logger.AddDebug("OpenControlPort")
         CloseControlPort()
         _port = New SerialPort(ModemInfo.Port, 9600)
         _port.Open()
     End Sub
 
     Private Function Request(req As String, Optional waitMs As Integer = 500) As String
+        _logger.AddDebug("Request")
         Try
-            _port.ReadExisting()
+            Dim read = "" '
+            If _port.BytesToRead > 0 Then _port.ReadExisting()
             _logger.AddDebug("PortWrite: " + req)
             _port.Write(vbCrLf + req + vbCrLf)
             Threading.Thread.Sleep(waitMs)
-            Dim read = _port.ReadExisting
+            read = _port.ReadExisting
             _logger.AddDebug("PortRead: " + read)
             Return read
         Catch ex As Exception
@@ -44,6 +49,7 @@ Public Class HuaweiE3372
     End Function
 
     Private Sub FirstModemCheck()
+        _logger.AddDebug("FirstModemCheck")
         Dim ati = Request("ATI").ToLower
         If ati.Contains(ModemInfo.Model.ToLower) = False Then Throw New Exception("Modem not answerred to ATI command or model mismatch")
         Dim setportState = Request("at^setport?", 500)
@@ -57,12 +63,14 @@ Public Class HuaweiE3372
     End Sub
 
     Public Sub DisconnectModem()
+        _logger.AddDebug("DisconnectModem")
         Dim response = ""
         response = Request("at^ndisconn=1,0")
         If response.Contains("OK" + vbCrLf) = False Then Throw New Exception("Modem at^ndisconn error")
     End Sub
 
     Public Sub ConnectModem()
+        _logger.AddDebug("ConnectModem")
         Dim response = ""
         'response = Request("AT+CFUN=1")
         _logger.AddInformation("Modem " + _modemInfo.Model + " " + _modemInfo.Port + " trying to connect")
@@ -107,6 +115,7 @@ Public Class HuaweiE3372
     End Sub
 
     Public Sub CheckConnectedState()
+        _logger.AddDebug("CheckConnectedState")
         If (Now - ExtendedInfo.LastLinkReport).TotalSeconds > 30 Then
             _state = ModemState.connecting
             ExtendedInfo.GsmMode = ""
@@ -145,6 +154,7 @@ Public Class HuaweiE3372
     End Sub
 
     Public Sub GetSimCardNumber()
+        _logger.AddDebug("GetSimCardNumber")
         Try
             Dim response = Request("AT+CUSD=1,""2A19AC3602"",15", 10000)
             If response.Contains("+CUSD: ") Then
