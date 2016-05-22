@@ -111,10 +111,18 @@ Public Class ModemControl
         _autouiAdditional.Text = add
     End Sub
 
-    Public Sub RunInThread()
+    Public Function RunInThread()
         If _thread IsNot Nothing Then Throw New Exception
         _thread = New Thread(AddressOf Run)
         _thread.Start()
+        Return _thread
+    End Function
+
+    Public Sub StopThread()
+        Try
+            _thread.Abort()
+        Catch ex As Exception
+        End Try
     End Sub
 
     Public Sub Check()

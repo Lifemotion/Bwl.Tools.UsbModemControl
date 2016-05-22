@@ -1,0 +1,10 @@
+open sftp://pi:pi@raspberrypi
+option transfer binary
+pwd
+rm usb-modem
+mkdir usb-modem
+put "debug\UsbModemControl Service\*" filemask="*.exe;*.dll" usb-modem/ 
+cd usb-modem/bin/
+//call pkill mono
+//call mono Bwl.Tools.UsbModemControl.Service.exe &
+close
