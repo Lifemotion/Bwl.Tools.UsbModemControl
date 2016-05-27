@@ -15,12 +15,7 @@ Module Service
     Sub Main()
         _modem.RunInThread()
         Do While _running
-            ' Console.WriteLine(Now.ToLongTimeString + " " + _modem.StateText + " " + _modem.AdditionalText)
             Threading.Thread.Sleep(500)
-            If Console.KeyAvailable Then
-                Dim key = Console.ReadKey
-                If key.Key = ConsoleKey.Escape Then _running = False
-            End If
         Loop
         _modem.StopThread()
     End Sub

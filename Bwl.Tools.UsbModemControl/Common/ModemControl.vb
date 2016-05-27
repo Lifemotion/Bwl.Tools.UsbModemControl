@@ -140,38 +140,41 @@ Public Class ModemControl
         End Select
     End Sub
 
-    Public Shared Function DetectModems() As ModemInfo()
+    Public Function DetectModems() As ModemInfo()
         Dim list As New List(Of ModemInfo)
         Dim ports = IO.Ports.SerialPort.GetPortNames
         For Each portName In ports
-            Dim port As New IO.Ports.SerialPort(portName, 9600)
-            Try
-                port.Open()
-                port.WriteTimeout = 500
-                port.Write("ATI" + vbCrLf)
-                Thread.Sleep(500)
-                Dim read = port.ReadExisting.ToLower
-                If read.Contains("huawei") Then
-                    Dim e3372 = "E3372"
-                    If read.Contains(e3372.ToLower) Then list.Add(New ModemInfo(portName, e3372))
-                    Dim e3372_megafon = "M150-2"
-                    If read.Contains(e3372_megafon.ToLower) Then list.Add(New ModemInfo(portName, e3372_megafon))
-                End If
-            Catch ex As Exception
-            End Try
-            Try
-                port.Close()
-            Catch ex As Exception
-            End Try
+            _logger.AddDebug("Trying " + portName)
+            If portName.ToLower.Contains("com") Or portName.ToLower.Contains("ttyusb") Then
+                Dim port As New IO.Ports.SerialPort(portName, 9600)
+                Try
+                    port.Open()
+                    port.WriteTimeout = 500
+                    port.Write("Then ThenATI" + vbCrLf)
+                    Thread.Sleep(500)
+                    Dim read = port.ReadExisting.ToLower
+                    If read.Contains("huawei") Then
+                        Dim e3372 = "E3372"
+                        If read.Contains(e3372.ToLower) Then list.Add(New ModemInfo(portName, e3372))
+                        Dim e3372_megafon = "M150-2"
+                        If read.Contains(e3372_megafon.ToLower) Then list.Add(New ModemInfo(portName, e3372_megafon))
+                    End If
+                Catch ex As Exception
+                End Try
+                Try
+                    port.Close()
+                Catch ex As Exception
+                End Try
+            End If
         Next
         Return list.ToArray
     End Function
 
     Private Sub FindModems()
-        _logger.AddMessage("Trying to find modems...")
+        _logger.AddMessage("Trying To find modems...")
         Dim modems = DetectModems()
         If modems.Length = 0 Then
-            _logger.AddMessage("Modems not found")
+            _logger.AddMessage("Modems Not found")
         Else
             Dim list As New List(Of Modem)
             For Each mi In modems
