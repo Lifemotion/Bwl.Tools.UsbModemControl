@@ -35,6 +35,7 @@ Public Module App
         'запуск локального интерфейса, если он не нужен, можно закомментировать
         Application.EnableVisualStyles()
         _appForm = AutoUIForm.Create(_app)
+        _appForm.Icon = My.Resources.Icon
 
         Dim showForm = _app.RootStorage.CreateBooleanSetting("ShowForm", True, "Показывать форму при запуске")
         If showForm.Value Then _appForm.Show()
