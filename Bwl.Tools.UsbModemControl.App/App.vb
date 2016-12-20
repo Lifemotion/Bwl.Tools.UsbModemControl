@@ -1,4 +1,5 @@
-﻿Imports Bwl.Network.ClientServer
+﻿Imports System.Threading
+Imports Bwl.Network.ClientServer
 Imports Bwl.Framework
 
 Public Module App
@@ -15,6 +16,8 @@ Public Module App
     Private _netBeacon As NetBeacon
     Private WithEvents _port As IntegerSetting
 
+    Private _managerCheckThread As Thread
+
     Sub Main()
         _modem.RunInThread()
 
@@ -25,10 +28,10 @@ Public Module App
 
         _localServer = New NetServer()
         _localRemoting = New RemoteAppServer(_localServer, _app.RootStorage, _app.RootLogger, _app.AutoUI)
-        _netBeacon = New NetBeacon(_port.Value, "UsbModemControl", True, True)
+        _netBeacon = New NetBeacon(_port.Value, "Tools.UsbModemControl", True, True)
 
         _localServer.Open("*:" + _port.Value.ToString, "")
-        _localServer.RegisterMe("UsbModemControl", "", "", "")
+        _localServer.RegisterMe("UsbModemControl", "", "Tools", "")
         _app.RootLogger.AddMessage("Сетевой сервер запущен, порт " + _port.Value.ToString())
         ''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
 
@@ -37,10 +40,42 @@ Public Module App
         _appForm = AutoUIForm.Create(_app)
         _appForm.Icon = My.Resources.Icon
 
-        Dim showForm = _app.RootStorage.CreateBooleanSetting("ShowForm", True, "Показывать форму при запуске")
-        If showForm.Value Then _appForm.Show()
+        _appForm.Show()
+
+        _managerCheckThread = New Thread(Sub()
+                                             ToolsManagerCheckThread()
+                                         End Sub)
+        _managerCheckThread.IsBackground = True
+        _managerCheckThread.Start()
+
         Application.Run()
     End Sub
+
+
+    Private Sub ToolsManagerCheckThread()
+        Do
+            _appForm.Invoke(Sub()
+                                _appForm.Visible = Not CheckToolsManager()
+                            End Sub)
+            Thread.Sleep(5000)
+        Loop
+    End Sub
+    Private Function CheckToolsManager() As Boolean
+        Dim res = False
+        Try
+
+            Dim processes = Diagnostics.Process.GetProcesses()
+            If processes IsNot Nothing AndAlso processes.Any Then
+                For Each pr In processes
+                    If pr.ProcessName.Contains("Tools.Manager") Then res = True
+                Next
+            End If
+
+        Catch ex As Exception
+            _app.RootLogger.AddError(ex.ToString())
+        End Try
+        Return res
+    End Function
 
     Private Sub LocalServerReceivedMessage(message As NetMessage) Handles _localServer.ReceivedMessage
         If message.Part(0) = "AppLogic" Then
