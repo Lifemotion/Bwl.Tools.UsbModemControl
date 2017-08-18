@@ -6,6 +6,9 @@ Public Class ModemControl
     Private _logger As Logger
     private _state as ModemControlState = ModemControlState.modemsNotFound
     private _modems as New List(Of Modem)
+    'Private _isConsoleMode As Boolean = False
+    Private _noModemStateCount As Integer = 0
+    Public Event NeedExitApp()
 
     ReadOnly Property State As ModemControlState
             Get
@@ -54,6 +57,7 @@ Public Class ModemControl
 
     Public Sub Run()
         Do
+            _logger.AddInformation("MainThread")
             Try
                 CreateStates()
             Catch ex As Exception
@@ -69,7 +73,7 @@ Public Class ModemControl
             Catch ex As Exception
                 _logger.AddError("ModemControl CreateStates Error: " + ex.Message)
             End Try
-            Thread.Sleep(500)
+            Thread.Sleep(5000)
         Loop
     End Sub
 
@@ -106,12 +110,28 @@ Public Class ModemControl
                 End If
             Next
         End If
+
+        'If _isConsoleMode Then
+        '    Console.Clear()
+        '    For Each s In list
+        '        Console.WriteLine(s)
+        '    Next
+        'End If
+
         _autouiInfoList.Items.Replace(list.ToArray)
         _autouiState.Text = info
         _autouiAdditional.Text = add
     End Sub
 
     Public Function RunInThread()
+        If _thread IsNot Nothing Then Throw New Exception
+        _thread = New Thread(AddressOf Run)
+        _thread.Start()
+        Return _thread
+    End Function
+
+    Public Function RunInConsoleThread()
+        '_isConsoleMode = True
         If _thread IsNot Nothing Then Throw New Exception
         _thread = New Thread(AddressOf Run)
         _thread.Start()
@@ -136,36 +156,57 @@ Public Class ModemControl
                         Modems.Remove(modem)
                     End If
                 Next
-                If Modems.Count = 0 Then _State = ModemControlState.modemsNotFound
         End Select
+        If Modems.Count = 0 Then
+            _state = ModemControlState.modemsNotFound
+            _noModemStateCount += 1
+        Else
+            _noModemStateCount = 0
+        End If
+        If _noModemStateCount > 6 Then
+            RaiseEvent NeedExitApp()
+        End If
     End Sub
 
     Public Function DetectModems() As ModemInfo()
         Dim list As New List(Of ModemInfo)
         Dim ports = IO.Ports.SerialPort.GetPortNames
         For Each portName In ports
-            _logger.AddDebug("Trying " + portName)
-            If portName.ToLower.Contains("com") Or portName.ToLower.Contains("ttyusb") Then
-                Dim port As New IO.Ports.SerialPort(portName, 9600)
-                Try
-                    port.Open()
-                    port.WriteTimeout = 500
-                    port.Write("Then ThenATI" + vbCrLf)
-                    Thread.Sleep(500)
-                    Dim read = port.ReadExisting.ToLower
-                    If read.Contains("huawei") Then
-                        Dim e3372 = "E3372"
-                        If read.Contains(e3372.ToLower) Then list.Add(New ModemInfo(portName, e3372))
-                        Dim e3372_megafon = "M150-2"
-                        If read.Contains(e3372_megafon.ToLower) Then list.Add(New ModemInfo(portName, e3372_megafon))
-                    End If
-                Catch ex As Exception
-                End Try
-                Try
-                    port.Close()
-                Catch ex As Exception
-                End Try
-            End If
+            Try
+                _logger.AddDebug("Trying " + portName)
+                If portName.ToLower.Contains("com") Or portName.ToLower.Contains("ttyusb") Then
+                    Dim port As New IO.Ports.SerialPort(portName, 9600)
+                    Try
+                        port.Open()
+                        port.WriteTimeout = 500
+                        port.Write("Then ThenATI" + vbCrLf)
+                        Thread.Sleep(500)
+                        port.ReadTimeout = 500
+                        Dim read = String.Empty
+                        While port.BytesToRead > 0
+                            read += port.ReadLine.ToLower() 'ReadExisting - не контролируется время таймаута и ПО зависает
+                        End While
+
+
+                        _logger.AddDebug("Readed from port " + read + port.BytesToRead.ToString)
+                        If read.Contains("huawei") Then
+                            Dim e3372 = "E3372"
+                            If read.Contains(e3372.ToLower) Then list.Add(New ModemInfo(portName, e3372))
+                            Dim e3372_megafon = "M150-2"
+                            If read.Contains(e3372_megafon.ToLower) Then list.Add(New ModemInfo(portName, e3372_megafon))
+                        End If
+                    Catch ex As Exception
+                        _logger.AddWarning(ex.ToString)
+                    End Try
+                    Try
+                        port.Close()
+                    Catch ex As Exception
+                        _logger.AddWarning(ex.ToString)
+                    End Try
+                End If
+            Catch ex As Exception
+                _logger.AddWarning(ex.ToString)
+            End Try
         Next
         Return list.ToArray
     End Function
