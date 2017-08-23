@@ -164,6 +164,7 @@ Public Class ModemControl
             _noModemStateCount = 0
         End If
         If _noModemStateCount > 6 Then
+            _logger.AddWarning("NoModems 6 time -> restart")
             RaiseEvent NeedExitApp()
         End If
     End Sub
@@ -186,8 +187,6 @@ Public Class ModemControl
                         While port.BytesToRead > 0
                             read += port.ReadLine.ToLower() 'ReadExisting - не контролируется время таймаута и ПО зависает
                         End While
-
-
                         _logger.AddDebug("Readed from port " + read + port.BytesToRead.ToString)
                         If read.Contains("huawei") Then
                             Dim e3372 = "E3372"
