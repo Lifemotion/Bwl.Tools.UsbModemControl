@@ -8,7 +8,7 @@ Public MustInherit Class Modem
 
     Public Property ExtendedInfo As New ModemExtendedInfo ' Расширенная информация
     Public Property Enabled As Boolean = True ' Включён
-    Public Property APN As String = "internet" ' Доступ к интернету
+    Public Property APN As String = "FixedIP.NW"  ' Доступ к интернету "FixedIP.NW" internet
 
     Public ReadOnly Property ModemInfo As ModemInfo
         Get
